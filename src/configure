@@ -1,0 +1,14 @@
+#configure before makefile
+#Han Wang
+#2019/05/28
+
+curDir=$(pwd)
+baseDir=$(dirname $curDir)
+#configure process
+export LD_LIBRARY_PATH="/usr/local/netcdf4/lib":"/usr/lib64":$LD_LIBRARY_PATH
+export LIBRARY_PATH="/usr/local/netcdf4/lib":"/usr/lib64":$LIBRARY_PATH
+export CPLUS_INCLUDE_PATH=/usr/include:/usr/local/netcdf4/include:$CPLUS_INCLUDE_PATH
+export PATH="${baseDir}/bin":$PATH
+
+echo "Finsh configure"
+

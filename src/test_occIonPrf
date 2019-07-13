@@ -1,0 +1,32 @@
+#!/bin/bash
+
+#parameter
+currentDir=$(pwd)
+parentDir=$(dirname $currentDir)
+occDir="${parentDir}/man/test/occ/"
+digDir="${parentDir}/man/test/dig/"
+resDir="${parentDir}/man/test/res/"
+binDir="${parentDir}/bin/"
+
+logfile="${resDir}log.txt"
+touch $logfile
+
+#occ->info (ip2info)
+${binDir}ip2info "${occDir}ionPrf_C001.2014.005.10.56.G32_2013.3520_nc" >> $logfile
+mv "${occDir}ionPrf_C001.2014.005.10.56.G32_2013.3520_nc.txt" ${resDir}
+echo "***Success [ip2info] test***"
+
+#occ->report (ip2rep)
+${binDir}ip2rep -d -w -q  "${occDir}" "${resDir}report.occ.txt" >> $logfile
+echo "***Success [ip2rep] test***"
+
+#dig->report (ipfromdig)
+${binDir}ipfromdig -q"100" -p "${digDir}BC840.txt" "${resDir}report.dig.txt" >> $logfile
+echo "***Success [ipfromdig] test***"
+
+#match occ + dig (ipmatch)
+${binDir}ipmatch -s"60 3 5" -t"EQUALITY" -N"100" -p"${resDir}par.occ_dig.txt" -c"${resDir}corr.occ_dig.txt" "${resDir}report.occ.txt" "${resDir}report.dig.txt" >> $logfile
+echo "***Success [ipmatch] test***"
+
+echo "***Success all tests***"
+exit 0
