@@ -33,11 +33,17 @@ $ ./test_occIonPrf
 ```
 
 若安装成功，则测试脚本将在终端输出：
+***
 ![测试脚本终端输出](./doc/Figures/fig.test.shellmsg1.png)
+***
 同时`man/test/res/`目录下将生成以下文件：
+***
 ![测试脚本文件输出](./doc/Figures/fig.test.outfile1.png)
+***
 其中`log.txt`内容应如下：
+***
 ![log文件内容](./doc/Figures/fig.test.outfile2.png)
+***
 
 # 使用
 程序     | 功能
