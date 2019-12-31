@@ -721,13 +721,26 @@ string OccAzi::creIonPhsByIONPRF(std::string _copath, std::string _subdir) {
 	string prefix = (_copath==string("#"))?(this->datafile.get_filepath()+string("/")):(_copath);
 	
 	//check the subpdir
-	string dir = prefix;
-	if(_subdir[_subdir.size()-1] == '*') {
-		vector<string> info;
-		File::split(this->datafile.get_filename(), string("."), info);
-		string year_str = info[1];
-		string doy_str = info[2];
-		dir = prefix + year_str + string("/") + year_str + string(".") + doy_str + string("/");
+	//PreProcess	
+        vector<string> info;
+        File::split(this->datafile.get_filename(), string("."), info);
+        string year_str = info[1];
+        string doy_str = info[2];
+        //SubDir
+        string dir;
+	switch(_subdir[_subdir.size()-1]) {	
+	  case '*': //Standard SubDir
+                dir = prefix + year_str + string("/") + year_str + string(".") + doy_str + string("/");
+                break;
+          case '|': //Half Standard SubDir
+                dir = prefix + year_str + string(".") + doy_str + string("/");
+                break; 
+          case '#': //None SubDir
+                dir = prefix;
+                break;
+          default: //Default to None SubDir
+                dir = prefix;
+                break;
 	}
 	
 	//epoch ionphs filename
@@ -746,16 +759,29 @@ string OccAzi::creIonPhsByFY3C(std::string _copath, std::string _subdir) {
 	string prefix = (_copath==string("#"))?(this->datafile.get_filepath()+string("/")):(_copath);
 	
 	//check the subpdir
-	string dir = prefix;
-	if(_subdir[_subdir.size()-1] == '*') {
-		string year_str = info[7].substr(0,4);
-		int year = File::str2num<int>(year_str);
-		int mon = File::str2num<int>(info[7].substr(4,2));
-		int day = File::str2num<int>(info[7].substr(6,2));
-		int doy = Time::cal_doy(year, mon, day);
-		std::ios_base::fmtflags flags(ios::right);
-		string doy_str = (File::num2str<int>(doy, flags, 3, 0, '0')).substr(0, 3);
+	//PreProcess
+	string year_str = info[7].substr(0,4);
+        int year = File::str2num<int>(year_str);
+        int mon = File::str2num<int>(info[7].substr(4,2));
+        int day = File::str2num<int>(info[7].substr(6,2));		
+        int doy = Time::cal_doy(year, mon, day);
+        std::ios_base::fmtflags flags(ios::right);
+        string doy_str = (File::num2str<int>(doy, flags, 3, 0, '0')).substr(0, 3);
+        //SubDir
+        string dir;
+	switch(_subdir[_subdir.size()-1]) {
+          case '*': //Standard SubDir
 		dir = prefix + year_str + string("/") + year_str + string(".") + doy_str + string("/");
+                break;
+          case '|': //Half Sttandard SubDir
+                dir = prefix + year_str + string(".") + doy_str + string("/");
+                break;
+          case '#': //None SubDir
+                dir = prefix;
+                break;
+          default: //Default to None SubDir
+                dir = prefix;
+                break;
 	}
 	//epoch ionphs filename
 	return dir + string("FY3C_GNOSX_GBAL_L1_") + time_str + sat_str + string("MS.NC");
